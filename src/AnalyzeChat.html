@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze Chat - ScanShield</title>
+    <link rel="stylesheet" href="output.css">
+    <style>
+        /* Custom styles for this page */
+        .analyzer-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .analyzer-box:hover {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .analyzer-box.dragover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .result-card {
+            transition: all 0.3s ease;
+        }
+        
+        .risk-indicator {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #10b981, #f59e0b, #ef4444);
+        }
+        
+        .risk-marker {
+            position: absolute;
+            top: -2px;
+            width: 4px;
+            height: 12px;
+            background-color: #000;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+        
+        .warning-item {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .warning-item:hover {
+            transform: translateX(4px);
+        }
+        
+        .warning-high {
+            border-left-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        
+        .warning-medium {
+            border-left-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+        
+        .warning-low {
+            border-left-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .example-message {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .example-message:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .keyword-highlight {
+            background-color: #fef3c7;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <span class="text-xl">🛡️</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">ScanShield</h1>
+                        <p class="text-xs text-gray-500 -mt-1">Protect Your Purchase</p>
+                    </div>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="Home.html" class="text-gray-700 font-medium hover:text-blue-600">Home</a>
+                    <a href="ReportScam.html" class="text-gray-700 font-medium hover:text-blue-600">Report Scam</a>
+                    <a href="Reports.html" class="text-gray-700 font-medium hover:text-blue-600">Reports</a>
+                    <a href="CheckSeller.html" class="text-gray-700 font-medium hover:text-blue-600">Check Seller</a>
+                    <a href="AnalyzeChat.html" class="text-blue-600 font-bold">Analyze Chat</a>
+                    <a href="Learn.html" class="text-gray-700 font-medium hover:text-blue-600">Learn</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                    <span class="text-xl">☰</span>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3 pb-2">
+                <a href="Home.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 rounded-lg px-2">Home</a>
+                <a href="ReportScam.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 rounded-lg px-2">Report Scam</a>
+                <a href="Reports.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 rounded-lg px-2">Reports</a>
+                <a href="CheckSeller.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 rounded-lg px-2">Check Seller</a>
+                <a href="AnalyzeChat.html" class="block py-2 text-blue-600 font-bold rounded-lg px-2">Analyze Chat</a>
+                <a href="Learn.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 rounded-lg px-2">Learn</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Page Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Chat Message Analyzer</h1>
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                Detect suspicious patterns in seller conversations and identify potential scams
+            </p>
+        </div>
+
+        <!-- Main Analyzer Section -->
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Paste the conversation or message from the seller</h2>
+            
+            <!-- Text Input Area -->
+            <div class="analyzer-box rounded-xl p-6 mb-6">
+                <textarea 
+                    id="chatInput"
+                    rows="8"
+                    placeholder='Example: "Hello! This item is cheap price, limited stock. Send deposit $50 now to reserve. Trust me, guaranteed authentic!"'
+                    class="w-full bg-transparent outline-none resize-none text-gray-700"
+                ></textarea>
+                
+                <div class="flex justify-between items-center mt-4">
+                    <div class="text-gray-500 text-sm">
+                        <span id="charCount">0</span> characters
+                    </div>
+                    <div class="text-gray-500 text-sm">
+                        <button id="clearBtn" class="text-gray-500 hover:text-gray-700">
+                            Clear text
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analyze Button -->
+            <button 
+                id="analyzeBtn"
+                class="w-full bg-blue-600 text-white font-semibold py-4 px-8 rounded-lg text-lg hover:bg-blue-700 transition mb-8"
+            >
+                Analyze Message
+            </button>
+            
+            <!-- How It Works Section -->
+            <div class="border-t border-gray-200 pt-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">How it works</h3>
+                <p class="text-gray-700 mb-4">
+                    Our rule-based analyzer scans for common scam keywords and patterns such as urgency tactics, 
+                    suspicious payment requests, and pressure to act quickly. The analysis is done locally in your 
+                    browser - no data is sent to external servers.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="text-2xl mb-2">🔍</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Keyword Detection</h4>
+                        <p class="text-gray-600 text-sm">Identifies common scam phrases and urgency words</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="text-2xl mb-2">📊</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Pattern Analysis</h4>
+                        <p class="text-gray-600 text-sm">Looks for pressure tactics and suspicious requests</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="text-2xl mb-2">🛡️</div>
+                        <h4 class="font-bold text-gray-800 mb-2">Risk Assessment</h4>
+                        <p class="text-gray-600 text-sm">Provides a risk score with detailed explanations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Messages -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Example Suspicious Messages</h2>
+            <p class="text-gray-600 mb-6">Click on any example to test the analyzer:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Example 1 -->
+                <div class="example-message bg-white rounded-xl shadow-md p-6">
+                    <div class="text-2xl mb-4">📱</div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "Hi! This iPhone is cheap price only $200! Limited stock, need quick payment via bank transfer. No meetup, delivery only."
+                    </p>
+                    <button onclick="loadExample(1)" class="text-blue-600 font-medium hover:text-blue-800">
+                        Click to test this message →
+                    </button>
+                </div>
+                
+                <!-- Example 2 -->
+                <div class="example-message bg-white rounded-xl shadow-md p-6">
+                    <div class="text-2xl mb-4">💸</div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "Special discount today only! Pay first via bank transfer to reserve item. Trust me, 100% authentic. Limited time offer!"
+                    </p>
+                    <button onclick="loadExample(2)" class="text-blue-600 font-medium hover:text-blue-800">
+                        Click to test this message →
+                    </button>
+                </div>
+                
+                <!-- Example 3 -->
+                <div class="example-message bg-white rounded-xl shadow-md p-6">
+                    <div class="text-2xl mb-4">💻</div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "Hello, the laptop is available. You can check it first but need 50% deposit via Wing. Final price $350, very cheap."
+                    </p>
+                    <button onclick="loadExample(3)" class="text-blue-600 font-medium hover:text-blue-800">
+                        Click to test this message →
+                    </button>
+                </div>
+                
+                <!-- Example 4 -->
+                <div class="example-message bg-white rounded-xl shadow-md p-6">
+                    <div class="text-2xl mb-4">🚨</div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "URGENT: Last unit available! Send money now to secure. No questions, fast transaction only. Price negotiable if pay now."
+                    </p>
+                    <button onclick="loadExample(4)" class="text-blue-600 font-medium hover:text-blue-800">
+                        Click to test this message →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Analysis Results</h2>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-8 text-center">
+                    <div class="loader mx-auto mb-4"></div>
+                    <p class="text-gray-600">Analyzing message for suspicious patterns...</p>
+                </div>
+            </div>
+
+            <!-- Results Container -->
+            <div id="resultsContainer">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="bg-blue-50 rounded-xl p-8 mt-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Chat Safety Tips</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-3">🚩 Red Flags to Watch For:</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">•</span>
+                            <span>Urgency and pressure to act quickly</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">•</span>
+                            <span>Requests for upfront payment before meeting</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">•</span>
+                            <span>Too-good-to-be-true prices</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">•</span>
+                            <span>Refusal to meet in person or show the item</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">•</span>
+                            <span>Vague or evasive answers to questions</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 mb-3">✅ Safe Practices:</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Always meet in public places for transactions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Inspect items thoroughly before payment</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Use secure payment methods with buyer protection</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Check seller history and reviews</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">•</span>
+                            <span>Trust your instincts - if it feels wrong, it probably is</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                        <div class="bg-red-600 text-white p-2 rounded-lg">
+                            <span class="text-xl">🛡️</span>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold">ScamShield</h1>
+                            <p class="text-sm text-gray-400 -mt-1">Online Selling Scam Report Platform</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">Protecting Cambodian online shoppers from scams.</p>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400 mb-2">© 2025 ScamShield - Online Selling Scam Report Platform</p>
+                    <p class="text-gray-500 text-sm">
+                        Developed by Sorayuth Roth & Strongchhay Ly | Cambodia Academy of Digital Technology (CADT)
+                    </p>
+                    <p class="text-gray-500 text-sm mt-1">
+                        Data stored locally in your browser. No personal information is sent to external servers.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Character counter
+        const chatInput = document.getElementById('chatInput');
+        const charCount = document.getElementById('charCount');
+        
+        chatInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        // Clear button
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            chatInput.value = '';
+            charCount.textContent = '0';
+            chatInput.focus();
+        });
+
+        // Analyze button
+        document.getElementById('analyzeBtn').addEventListener('click', analyzeChat);
+
+        // Example messages
+        const examples = {
+            1: "Hi! This iPhone is cheap price only $200! Limited stock, need quick payment via bank transfer. No meetup, delivery only.",
+            2: "Special discount today only! Pay first via bank transfer to reserve item. Trust me, 100% authentic. Limited time offer!",
+            3: "Hello, the laptop is available. You can check it first but need 50% deposit via Wing. Final price $350, very cheap.",
+            4: "URGENT: Last unit available! Send money now to secure. No questions, fast transaction only. Price negotiable if pay now."
+        };
+
+        function loadExample(exampleNum) {
+            chatInput.value = examples[exampleNum];
+            charCount.textContent = examples[exampleNum].length;
+            
+            // Scroll to input
+            chatInput.scrollIntoView({ behavior: 'smooth' });
+            chatInput.focus();
+            
+            // Auto-analyze after a short delay
+            setTimeout(analyzeChat, 500);
+        }
+
+        // Analyze chat function
+        function analyzeChat() {
+            const message = chatInput.value.trim();
+            
+            if (!message) {
+                alert('Please paste or type a message to analyze.');
+                chatInput.focus();
+                return;
+            }
+            
+            if (message.length < 10) {
+                alert('Please enter a longer message for better analysis (minimum 10 characters).');
+                return;
+            }
+            
+            // Show loading state
+            showLoading();
+            
+            // Simulate analysis delay
+            setTimeout(() => {
+                const analysis = analyzeMessage(message);
+                displayResults(analysis, message);
+            }, 800);
+        }
+        
+        // Show loading state
+        function showLoading() {
+            document.getElementById('resultsSection').classList.remove('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('resultsContainer').innerHTML = '';
+        }
+        
+        // Analyze message for scam patterns
+        function analyzeMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Define scam patterns and keywords
+            const patterns = {
+                urgency: {
+                    keywords: ['urgent', 'now', 'today only', 'quick', 'fast', 'immediately', 'hurry', 'limited time', 'last chance'],
+                    weight: 3
+                },
+                pressure: {
+                    keywords: ['must', 'need to', 'have to', 'should', 'trust me', 'guaranteed', '100%', 'no risk'],
+                    weight: 2
+                },
+                payment: {
+                    keywords: ['bank transfer', 'wing', 'aba transfer', 'pay first', 'deposit', 'advance payment', 'send money'],
+                    weight: 4
+                },
+                avoidance: {
+                    keywords: ['no meetup', 'delivery only', 'cannot meet', 'online only', 'no inspection', 'trust system'],
+                    weight: 3
+                },
+                pricing: {
+                    keywords: ['cheap', 'discount', 'special price', 'low price', 'bargain', 'half price'],
+                    weight: 1
+                },
+                exclusivity: {
+                    keywords: ['limited stock', 'last unit', 'only one', 'exclusive', 'rare', 'hard to find'],
+                    weight: 2
+                }
+            };
+            
+            // Find matches and calculate score
+            let totalScore = 0;
+            let maxPossibleScore = 0;
+            const warnings = [];
+            const foundKeywords = [];
+            
+            // Check each pattern
+            for (const [category, data] of Object.entries(patterns)) {
+                let categoryMatches = 0;
+                
+                data.keywords.forEach(keyword => {
+                    if (lowerMessage.includes(keyword.toLowerCase())) {
+                        categoryMatches++;
+                        foundKeywords.push({
+                            keyword: keyword,
+                            category: category,
+                            weight: data.weight
+                        });
+                    }
+                });
+                
+                if (categoryMatches > 0) {
+                    const categoryScore = categoryMatches * data.weight;
+                    totalScore += categoryScore;
+                    
+                    warnings.push({
+                        category: category,
+                        score: categoryScore,
+                        matches: categoryMatches,
+                        weight: data.weight
+                    });
+                }
+                
+                maxPossibleScore += data.keywords.length * data.weight;
+            }
+            
+            // Calculate risk percentage (0-100)
+            const riskPercentage = maxPossibleScore > 0 ? 
+                Math.min(100, Math.round((totalScore / maxPossibleScore) * 100)) : 0;
+            
+            // Determine risk level
+            let riskLevel = 'low';
+            if (riskPercentage > 70) riskLevel = 'high';
+            else if (riskPercentage > 30) riskLevel = 'medium';
+            
+            // Generate highlighted message
+            const highlightedMessage = highlightKeywords(message, foundKeywords);
+            
+            return {
+                message: message,
+                highlightedMessage: highlightedMessage,
+                riskPercentage: riskPercentage,
+                riskLevel: riskLevel,
+                totalScore: totalScore,
+                maxPossibleScore: maxPossibleScore,
+                warnings: warnings,
+                foundKeywords: foundKeywords,
+                analysisTime: new Date().toLocaleTimeString()
+            };
+        }
+        
+        // Highlight keywords in message
+        function highlightKeywords(message, keywords) {
+            let highlighted = message;
+            
+            // Sort by longer keywords first to avoid overlapping highlights
+            const sortedKeywords = [...keywords].sort((a, b) => b.keyword.length - a.keyword.length);
+            
+            sortedKeywords.forEach(item => {
+                const regex = new RegExp(`(${item.keyword})`, 'gi');
+                highlighted = highlighted.replace(regex, '<mark class="keyword-highlight">$1</mark>');
+            });
+            
+            return highlighted;
+        }
+        
+        // Display analysis results
+        function displayResults(analysis, originalMessage) {
+            // Hide loading
+            document.getElementById('loadingState').classList.add('hidden');
+            
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+            
+            // Risk Score Card
+            const riskCard = createRiskCard(analysis);
+            resultsContainer.appendChild(riskCard);
+            
+            // Highlighted Message
+            const messageCard = createMessageCard(analysis);
+            resultsContainer.appendChild(messageCard);
+            
+            // Warnings List
+            if (analysis.warnings.length > 0) {
+                const warningsCard = createWarningsCard(analysis);
+                resultsContainer.appendChild(warningsCard);
+            }
+            
+            // Recommendations
+            const recommendationsCard = createRecommendationsCard(analysis);
+            resultsContainer.appendChild(recommendationsCard);
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Create risk assessment card
+        function createRiskCard(analysis) {
+            const card = document.createElement('div');
+            card.className = 'result-card bg-white rounded-xl shadow-md p-6 mb-6';
+            
+            let riskColor = '';
+            let riskText = '';
+            
+            switch(analysis.riskLevel) {
+                case 'high':
+                    riskColor = 'text-red-600';
+                    riskText = 'High Risk - Exercise Extreme Caution';
+                    break;
+                case 'medium':
+                    riskColor = 'text-yellow-600';
+                    riskText = 'Medium Risk - Be Careful';
+                    break;
+                case 'low':
+                    riskColor = 'text-green-600';
+                    riskText = 'Low Risk - Seems Reasonable';
+                    break;
+            }
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Risk Assessment</h3>
+                        <p class="text-gray-600">Analyzed at ${analysis.analysisTime}</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold ${riskColor}">${analysis.riskPercentage}%</div>
+                        <div class="text-gray-700 font-medium">${riskText}</div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-700 font-medium">Risk Level</span>
+                        <span class="font-bold">${analysis.riskLevel.toUpperCase()}</span>
+                    </div>
+                    <div class="relative risk-indicator mb-8">
+                        <div class="risk-marker" style="left: ${analysis.riskPercentage}%"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div>
+                            <p class="text-2xl font-bold text-gray-800">${analysis.warnings.length}</p>
+                            <p class="text-gray-600 text-sm">Warning Categories</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-800">${analysis.foundKeywords.length}</p>
+                            <p class="text-gray-600 text-sm">Suspicious Keywords</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-800">${analysis.totalScore}</p>
+                            <p class="text-gray-600 text-sm">Risk Score</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-800">${analysis.riskLevel === 'high' ? '⚠️' : '✅'}</p>
+                            <p class="text-gray-600 text-sm">Recommendation</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Create highlighted message card
+        function createMessageCard(analysis) {
+            const card = document.createElement('div');
+            card.className = 'result-card bg-white rounded-xl shadow-md p-6 mb-6';
+            
+            card.innerHTML = `
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Analyzed Message</h3>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <p class="text-gray-700 italic">"${analysis.highlightedMessage}"</p>
+                </div>
+                <p class="text-gray-600 text-sm mt-3">
+                    Highlighted words indicate potential scam keywords detected.
+                </p>
+            `;
+            
+            return card;
+        }
+        
+        // Create warnings card
+        function createWarningsCard(analysis) {
+            const card = document.createElement('div');
+            card.className = 'result-card bg-white rounded-xl shadow-md p-6 mb-6';
+            
+            let warningsHTML = '';
+            
+            analysis.warnings.forEach(warning => {
+                let warningClass = '';
+                let warningText = '';
+                
+                if (warning.score >= 12) {
+                    warningClass = 'warning-high';
+                    warningText = 'High Risk';
+                } else if (warning.score >= 6) {
+                    warningClass = 'warning-medium';
+                    warningText = 'Medium Risk';
+                } else {
+                    warningClass = 'warning-low';
+                    warningText = 'Low Risk';
+                }
+                
+                warningsHTML += `
+                    <div class="warning-item ${warningClass} p-4 mb-3 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-gray-800 capitalize">${warning.category.replace('_', ' ')}</h4>
+                            <span class="text-sm font-medium px-2 py-1 bg-white rounded">${warningText}</span>
+                        </div>
+                        <p class="text-gray-700 text-sm">
+                            Found ${warning.matches} suspicious keyword${warning.matches > 1 ? 's' : ''} in this category.
+                            Risk weight: ${warning.weight}/5
+                        </p>
+                    </div>
+                `;
+            });
+            
+            card.innerHTML = `
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Detected Warning Signs</h3>
+                ${warningsHTML}
+                <p class="text-gray-600 text-sm mt-4">
+                    Categories with higher scores indicate stronger scam indicators.
+                </p>
+            `;
+            
+            return card;
+        }
+        
+        // Create recommendations card
+        function createRecommendationsCard(analysis) {
+            const card = document.createElement('div');
+            card.className = 'result-card bg-white rounded-xl shadow-md p-6';
+            
+            let recommendation = '';
+            let action = '';
+            
+            switch(analysis.riskLevel) {
+                case 'high':
+                    recommendation = 'This message contains multiple high-risk scam indicators. Strongly recommend avoiding this seller.';
+                    action = 'Report this seller and do not proceed with any transaction.';
+                    break;
+                case 'medium':
+                    recommendation = 'This message shows several concerning patterns. Proceed with extreme caution.';
+                    action = 'Verify seller thoroughly, meet in person, and use secure payment methods.';
+                    break;
+                case 'low':
+                    recommendation = 'This message appears reasonable, but always practice safe online shopping habits.';
+                    action = 'Follow standard safety procedures and trust your instincts.';
+                    break;
+            }
+            
+            card.innerHTML = `
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Recommendations</h3>
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <p class="text-gray-700 mb-3">${recommendation}</p>
+                    <p class="text-gray-700 font-medium">${action}</p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="CheckSeller.html" class="bg-blue-100 text-blue-600 font-semibold py-3 px-6 rounded-lg text-center hover:bg-blue-200 transition">
+                        Check Seller Credibility
+                    </a>
+                    <a href="ReportScam.html" class="bg-red-100 text-red-600 font-semibold py-3 px-6 rounded-lg text-center hover:bg-red-200 transition">
+                        Report Suspicious Seller
+                    </a>
+                    <button onclick="analyzeChat()" class="bg-gray-100 text-gray-800 font-semibold py-3 px-6 rounded-lg hover:bg-gray-200 transition">
+                        Analyze Another Message
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+    </script>
+</body>
+</html>

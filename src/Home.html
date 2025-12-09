@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScanShield - Protecting Cambodian Online Shoppers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 50%, #f0f9ff 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+        
+        .protection-badge {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Navigation -->
+    <!-- Navigation Bar for ALL pages -->
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i class="fas fa-shield-alt text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">ScanShield</h1>
+                    <p class="text-xs text-gray-500 -mt-1">Protect Your Purchase</p>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex space-x-8">
+                <a href="Home.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Home</a>
+                <a href="ReportScam.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Report Scam</a>
+                <a href="Reports.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Reports</a>
+                <a href="CheckSeller.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Check Seller</a>
+                <a href="AnalyzeChat.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Analyze Chat</a>
+                <a href="Learn.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Learn</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3 pb-2">
+            <a href="Home.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Home</a>
+            <a href="ReportScam.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Report Scam</a>
+            <a href="Reports.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Reports</a>
+            <a href="CheckSeller.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Check Seller</a>
+            <a href="AnalyzeChat.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Analyze Chat</a>
+            <a href="Learn.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Learn</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 py-12 md:py-20">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 font-medium mb-6">
+                    <i class="fas fa-flag mr-2"></i>
+                    <span>Protecting Cambodian Online Shoppers</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                    Stop Online Selling Scams
+                </h1>
+                
+                <p class="text-lg text-gray-700 mb-8 max-w-2xl">
+                    Report scammers, check seller credibility, and protect yourself from online fraud. 
+                    A community-driven platform to make online shopping safer in Cambodia.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#" class="btn-primary text-white font-semibold py-3 px-8 rounded-lg text-center shadow-lg">
+                        <i class="fas fa-flag mr-2"></i>Report a Scam
+                    </a>
+                    <a href="#" class="btn-secondary text-white font-semibold py-3 px-8 rounded-lg text-center shadow-lg">
+                        <i class="fas fa-search mr-2"></i>Check a Seller
+                    </a>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative">
+                    <!-- Main Illustration -->
+                    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-green-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-shield-alt text-green-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">24/7 Protection Available</h3>
+                                <p class="text-gray-600">Round-the-clock scam monitoring</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center p-4 bg-blue-50 rounded-lg">
+                                <i class="fas fa-user-check text-blue-600 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Seller Verification</h4>
+                                    <p class="text-sm text-gray-600">Check seller credibility before buying</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center p-4 bg-red-50 rounded-lg">
+                                <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Scam Reports</h4>
+                                    <p class="text-sm text-gray-600">Real-time community scam alerts</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center p-4 bg-green-50 rounded-lg">
+                                <i class="fas fa-comments text-green-600 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Chat Analysis</h4>
+                                    <p class="text-sm text-gray-600">Analyze conversation for red flags</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Elements -->
+                    <div class="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-full opacity-20"></div>
+                    <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-blue-400 rounded-full opacity-20"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">How ScanShield Protects You</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Our platform offers multiple layers of protection to ensure your online shopping experience is safe and secure.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-md">
+                    <div class="bg-blue-100 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-flag text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Report Scams</h3>
+                    <p class="text-gray-600 mb-4">Share your scam experiences to warn others and help us identify fraudulent sellers.</p>
+                    <a href="#" class="text-blue-600 font-medium inline-flex items-center">
+                        Learn more <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-md">
+                    <div class="bg-green-100 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-search text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Check Seller Credibility</h3>
+                    <p class="text-gray-600 mb-4">Verify seller ratings, reviews, and scam reports before making a purchase.</p>
+                    <a href="#" class="text-blue-600 font-medium inline-flex items-center">
+                        Learn more <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-6 rounded-xl shadow-md">
+                    <div class="bg-purple-100 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-comments text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Analyze Chat</h3>
+                    <p class="text-gray-600 mb-4">Upload chat screenshots to detect potential scam patterns and red flags.</p>
+                    <a href="#" class="text-blue-600 font-medium inline-flex items-center">
+                        Learn more <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-bg py-16">
+        <div class="container mx-auto px-4 text-center">
+            <div class="max-w-3xl mx-auto">
+                <div class="protection-badge inline-flex items-center px-6 py-3 rounded-full mb-8">
+                    <i class="fas fa-shield-alt text-yellow-600 mr-3"></i>
+                    <span class="font-bold text-gray-800">24/7 Protection Available</span>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Ready to Shop Safely?</h2>
+                <p class="text-gray-700 text-lg mb-10">Join thousands of Cambodian shoppers who trust ScanShield to protect their online purchases.</p>
+                
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="#" class="btn-primary text-white font-semibold py-4 px-10 rounded-lg text-lg shadow-xl">
+                        <i class="fas fa-flag mr-3"></i>Report a Scam Now
+                    </a>
+                    <a href="#" class="bg-white text-blue-600 font-semibold py-4 px-10 rounded-lg text-lg border-2 border-blue-200 shadow-lg hover:bg-blue-50 transition">
+                        <i class="fas fa-search mr-3"></i>Check a Seller
+                    </a>
+                </div>
+                
+                <p class="text-gray-600 mt-10 text-sm">
+                    <i class="fas fa-users mr-2"></i> Community-driven protection • 
+                    <i class="fas fa-bolt mx-2"></i> Real-time alerts • 
+                    <i class="fas fa-lock mx-2"></i> Secure & Private
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg">
+                            <i class="fas fa-shield-alt text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold">ScanShield</h1>
+                            <p class="text-sm text-gray-400 -mt-1">Protect Your Purchase</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mt-4 max-w-md">A community-driven platform to make online shopping safer in Cambodia.</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2023 ScanShield. All rights reserved. Designed to protect Cambodian online shoppers.</p>
+                <p class="mt-2">This is a demonstration website for educational purposes.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

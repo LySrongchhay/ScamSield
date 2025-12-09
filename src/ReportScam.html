@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Scam - ScamShield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .form-progress {
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        
+        .file-upload.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(220, 38, 38, 0.2);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(75, 85, 99, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header/Navigation -->
+    <!-- Navigation Bar for ALL pages -->
+<nav class="bg-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i class="fas fa-shield-alt text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">ScanShield</h1>
+                    <p class="text-xs text-gray-500 -mt-1">Protect Your Purchase</p>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex space-x-8">
+                <a href="Home.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Home</a>
+                <a href="ReportScam.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Report Scam</a>
+                <a href="Reports.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Reports</a>
+                <a href="CheckSeller.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Check Seller</a>
+                <a href="AnalyzeChat.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Analyze Chat</a>
+                <a href="Learn.html" class="nav-link text-gray-700 font-medium hover:text-blue-600">Learn</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3 pb-2">
+            <a href="Home.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Home</a>
+            <a href="ReportScam.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Report Scam</a>
+            <a href="Reports.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Reports</a>
+            <a href="CheckSeller.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Check Seller</a>
+            <a href="AnalyzeChat.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Analyze Chat</a>
+            <a href="Learn.html" class="block py-2 text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 rounded-lg px-2">Learn</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Progress Bar -->
+    <div class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-center mb-4">
+                <div class="flex items-center">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center font-bold form-progress active-step">
+                            1
+                        </div>
+                        <span class="mt-2 text-sm font-medium text-gray-700">Basic Info</span>
+                    </div>
+                    
+                    <div class="w-24 h-1 bg-gray-300 mx-2"></div>
+                    
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold form-progress">
+                            2
+                        </div>
+                        <span class="mt-2 text-sm font-medium text-gray-500">Description</span>
+                    </div>
+                    
+                    <div class="w-24 h-1 bg-gray-300 mx-2"></div>
+                    
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold form-progress">
+                            3
+                        </div>
+                        <span class="mt-2 text-sm font-medium text-gray-500">Review & Submit</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-900">Report a Scam</h2>
+                <p class="text-gray-600 mt-2">Help protect others by sharing your experience</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Step 1: Basic Information -->
+        <div id="step-1" class="form-step active">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">Seller Information</h3>
+                
+                <form id="scamReportForm">
+                    <!-- Seller Name -->
+                    <div class="mb-6">
+                        <label for="sellerName" class="block text-gray-700 font-medium mb-2">
+                            Seller Name / Username <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="sellerName" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                            placeholder="Enter seller's name or username">
+                        <p class="text-gray-500 text-sm mt-1">Enter the exact name or username used by the scammer.</p>
+                    </div>
+                    
+                    <!-- Phone Number -->
+                    <div class="mb-6">
+                        <label for="phoneNumber" class="block text-gray-700 font-medium mb-2">
+                            Phone Number <span class="text-red-500">*</span>
+                        </label>
+                        <div class="flex">
+                            <div class="flex items-center px-4 py-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg">
+                                <span class="text-gray-700 font-medium">+855</span>
+                            </div>
+                            <input type="tel" id="phoneNumber" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                placeholder="12 345 678"
+                                pattern="[0-9\s]{8,12}">
+                        </div>
+                        <p class="text-gray-500 text-sm mt-1">Enter the phone number used by the scammer.</p>
+                    </div>
+                    
+                    <!-- Platform Link -->
+                    <div class="mb-6">
+                        <label for="platformLink" class="block text-gray-700 font-medium mb-2">
+                            Platform Link / Profile URL
+                        </label>
+                        <input type="url" id="platformLink"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                            placeholder="https://facebook.com/...">
+                        <p class="text-gray-500 text-sm mt-1">Copy and paste the link to the scammer's profile.</p>
+                    </div>
+                    
+                    <!-- Platform Selection -->
+                    <div class="mb-6">
+                        <label for="platform" class="block text-gray-700 font-medium mb-2">
+                            Select Platform
+                        </label>
+                        <select id="platform"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-white">
+                            <option value="" disabled selected>Select platform where the scam occurred</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="khmer24">Khmer24</option>
+                            <option value="other">Other Platform</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-end pt-4 border-t border-gray-200">
+                        <button type="button" id="next-step-1" 
+                            class="btn-primary text-white font-semibold py-3 px-8 rounded-lg shadow-lg">
+                            Continue <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Step 2: Incident Description -->
+        <div id="step-2" class="form-step">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">Incident Details</h3>
+                
+                <!-- Incident Description -->
+                <div class="mb-8">
+                    <label for="incidentDescription" class="block text-gray-700 font-medium mb-2">
+                        Incident Description <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="incidentDescription" required rows="8"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition resize-none"
+                        placeholder="Describe what happened, how you were scammed, amount lost, etc..."></textarea>
+                    <p class="text-gray-500 text-sm mt-1">Be as detailed as possible to help others recognize similar scams.</p>
+                </div>
+                
+                <!-- Divider -->
+                <div class="border-t border-gray-200 my-8"></div>
+                
+                <!-- Screenshot Upload -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                        Upload Screenshot (Optional)
+                    </label>
+                    <p class="text-gray-500 text-sm mb-4">Upload screenshots of conversations, payment proof, or scammer's profile.</p>
+                    
+                    <!-- File Upload Area -->
+                    <div id="fileUploadArea" class="file-upload rounded-lg p-8 text-center cursor-pointer mb-4">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-700 font-medium mb-2">Click to upload screenshot</p>
+                        <p class="text-gray-500 text-sm">PNG, JPG up to 5MB</p>
+                        <input type="file" id="screenshotUpload" accept=".png,.jpg,.jpeg" class="hidden" multiple>
+                    </div>
+                    
+                    <!-- Uploaded Files Preview -->
+                    <div id="filePreview" class="hidden">
+                        <h4 class="font-medium text-gray-700 mb-3">Uploaded Screenshots:</h4>
+                        <div id="fileList" class="space-y-2"></div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between pt-6 border-t border-gray-200">
+                    <button type="button" id="prev-step-2" 
+                        class="btn-secondary text-white font-semibold py-3 px-8 rounded-lg shadow-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Back
+                    </button>
+                    <button type="button" id="next-step-2" 
+                        class="btn-primary text-white font-semibold py-3 px-8 rounded-lg shadow-lg">
+                        Continue <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Review & Submit -->
+        <div id="step-3" class="form-step">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">Review & Submit Report</h3>
+                
+                <!-- Data Privacy Notice -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                    <div class="flex items-start">
+                        <i class="fas fa-info-circle text-blue-600 text-xl mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-blue-800 mb-2">Important Notice</h4>
+                            <p class="text-blue-700 mb-3">
+                                Your report will be stored locally in your browser and shared with the community. 
+                                Please ensure all information is accurate.
+                            </p>
+                            <p class="text-blue-600 text-sm">
+                                <i class="fas fa-database mr-2"></i>
+                                Data stored locally in your browser. No personal information is sent to external servers.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Report Summary -->
+                <div class="border border-gray-200 rounded-lg p-6 mb-8">
+                    <h4 class="font-bold text-gray-800 mb-4">Report Summary</h4>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600 text-sm">Seller Name:</p>
+                                <p id="review-sellerName" class="font-medium text-gray-800">-</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm">Phone Number:</p>
+                                <p id="review-phoneNumber" class="font-medium text-gray-800">-</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600 text-sm">Platform:</p>
+                                <p id="review-platform" class="font-medium text-gray-800">-</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 text-sm">Profile URL:</p>
+                                <p id="review-platformLink" class="font-medium text-gray-800 truncate">-</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-600 text-sm">Incident Description:</p>
+                            <p id="review-incidentDescription" class="font-medium text-gray-800 mt-1">-</p>
+                        </div>
+                        
+                        <div>
+                            <p class="text-gray-600 text-sm">Screenshots:</p>
+                            <p id="review-screenshots" class="font-medium text-gray-800 mt-1">No screenshots uploaded</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Section -->
+                <div class="text-center">
+                    <button type="button" id="submitReport" 
+                        class="btn-primary text-white font-semibold py-4 px-12 rounded-lg text-lg shadow-xl mb-4">
+                        <i class="fas fa-paper-plane mr-3"></i>Submit Report
+                    </button>
+                    
+                    <p class="text-gray-600 text-sm max-w-2xl mx-auto">
+                        By submitting this report, you agree to share this information with the ScamShield community 
+                        to help protect others from similar scams.
+                    </p>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between pt-6 border-t border-gray-200 mt-8">
+                    <button type="button" id="prev-step-3" 
+                        class="btn-secondary text-white font-semibold py-3 px-8 rounded-lg shadow-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Back
+                    </button>
+                    <button type="button" id="edit-report" 
+                        class="bg-gray-200 text-gray-800 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-300 transition">
+                        <i class="fas fa-edit mr-2"></i>Edit Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                        <div class="bg-red-600 text-white p-2 rounded-lg">
+                            <i class="fas fa-shield-alt text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold">ScamShield</h1>
+                            <p class="text-sm text-gray-400 -mt-1">Online Selling Scam Report Platform</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">Protecting Cambodian online shoppers from scams.</p>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400 mb-2">© 2025 ScamShield - Online Selling Scam Report Platform</p>
+                    <p class="text-gray-500 text-sm">
+                        Developed by Sorayuth Roth & Strongchhay Ly | Cambodia Academy of Digital Technology (CADI)
+                    </p>
+                    <p class="text-gray-500 text-sm mt-1">
+                        Data stored locally in your browser. No personal information is sent to external servers.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 max-w-md mx-4 animate-fadeIn">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Report Submitted Successfully!</h3>
+                <p class="text-gray-600 mb-6">
+                    Thank you for helping protect the community. Your report has been saved locally and will help others avoid similar scams.
+                </p>
+                
+                <div class="space-y-3">
+                    <a href="index.html" class="block bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition">
+                        Return to Home
+                    </a>
+                    <button id="newReport" class="block bg-gray-200 text-gray-800 font-semibold py-3 rounded-lg hover:bg-gray-300 transition w-full">
+                        Submit Another Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multi-step form functionality
+        let currentStep = 1;
+        const totalSteps = 3;
+        const uploadedFiles = [];
+        
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            
+            // Step 1: Next button
+            document.getElementById('next-step-1').addEventListener('click', function() {
+                if (validateStep1()) {
+                    goToStep(2);
+                }
+            });
+            
+            // Step 2: Back button
+            document.getElementById('prev-step-2').addEventListener('click', function() {
+                goToStep(1);
+            });
+            
+            // Step 2: Next button
+            document.getElementById('next-step-2').addEventListener('click', function() {
+                if (validateStep2()) {
+                    updateReview();
+                    goToStep(3);
+                }
+            });
+            
+            // Step 3: Back button
+            document.getElementById('prev-step-3').addEventListener('click', function() {
+                goToStep(2);
+            });
+            
+            // Step 3: Edit button
+            document.getElementById('edit-report').addEventListener('click', function() {
+                goToStep(1);
+            });
+            
+            // Step 3: Submit button
+            document.getElementById('submitReport').addEventListener('click', submitReport);
+            
+            // File upload functionality
+            const fileUploadArea = document.getElementById('fileUploadArea');
+            const fileInput = document.getElementById('screenshotUpload');
+            const filePreview = document.getElementById('filePreview');
+            const fileList = document.getElementById('fileList');
+            
+            // Click to upload
+            fileUploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Drag and drop
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadArea.classList.add('dragover');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', function() {
+                fileUploadArea.classList.remove('dragover');
+            });
+            
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            // File input change
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            // New report button
+            document.getElementById('newReport').addEventListener('click', function() {
+                document.getElementById('successModal').classList.add('hidden');
+                resetForm();
+            });
+        });
+        
+        // Step navigation
+        function goToStep(step) {
+            // Hide current step
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            
+            // Show new step
+            document.getElementById(`step-${step}`).classList.add('active');
+            
+            // Update current step
+            currentStep = step;
+            
+            // Update progress indicator
+            updateProgress();
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const progressCircles = document.querySelectorAll('.form-progress');
+            
+            progressCircles.forEach((circle, index) => {
+                const stepNumber = index + 1;
+                
+                if (stepNumber < currentStep) {
+                    // Completed step
+                    circle.classList.remove('bg-gray-300', 'text-gray-600');
+                    circle.classList.add('bg-green-500', 'text-white');
+                } else if (stepNumber === currentStep) {
+                    // Current step
+                    circle.classList.remove('bg-gray-300', 'text-gray-600', 'bg-green-500', 'text-white');
+                    circle.classList.add('bg-red-600', 'text-white');
+                } else {
+                    // Future step
+                    circle.classList.remove('bg-red-600', 'text-white', 'bg-green-500', 'text-white');
+                    circle.classList.add('bg-gray-300', 'text-gray-600');
+                }
+            });
+        }
+        
+        // Validate step 1
+        function validateStep1() {
+            const sellerName = document.getElementById('sellerName').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            
+            if (!sellerName) {
+                alert('Please enter the seller name/username.');
+                document.getElementById('sellerName').focus();
+                return false;
+            }
+            
+            if (!phoneNumber) {
+                alert('Please enter the phone number.');
+                document.getElementById('phoneNumber').focus();
+                return false;
+            }
+            
+            // Validate phone number format
+            const phoneRegex = /^[0-9\s]{8,12}$/;
+            if (!phoneRegex.test(phoneNumber)) {
+                alert('Please enter a valid Cambodian phone number (8-12 digits).');
+                document.getElementById('phoneNumber').focus();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Validate step 2
+        function validateStep2() {
+            const incidentDescription = document.getElementById('incidentDescription').value.trim();
+            
+            if (!incidentDescription) {
+                alert('Please describe the incident.');
+                document.getElementById('incidentDescription').focus();
+                return false;
+            }
+            
+            if (incidentDescription.length < 20) {
+                alert('Please provide a more detailed description (at least 20 characters).');
+                document.getElementById('incidentDescription').focus();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Handle file uploads
+        function handleFiles(files) {
+            const filePreview = document.getElementById('filePreview');
+            const fileList = document.getElementById('fileList');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert('Please upload only image files (PNG, JPG).');
+                    continue;
+                }
+                
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File "${file.name}" is too large. Maximum size is 5MB.`);
+                    continue;
+                }
+                
+                // Add to uploaded files array
+                uploadedFiles.push(file);
+                
+                // Create file preview item
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg';
+                
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'flex items-center';
+                
+                const fileIcon = document.createElement('i');
+                fileIcon.className = 'fas fa-image text-gray-500 mr-3';
+                
+                const fileName = document.createElement('span');
+                fileName.className = 'text-gray-700 font-medium truncate max-w-xs';
+                fileName.textContent = file.name;
+                
+                const fileSize = document.createElement('span');
+                fileSize.className = 'text-gray-500 text-sm ml-3';
+                fileSize.textContent = formatFileSize(file.size);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'text-red-500 hover:text-red-700 ml-4';
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.onclick = function() {
+                    removeFile(file.name);
+                    fileItem.remove();
+                    if (uploadedFiles.length === 0) {
+                        filePreview.classList.add('hidden');
+                    }
+                };
+                
+                fileInfo.appendChild(fileIcon);
+                fileInfo.appendChild(fileName);
+                fileInfo.appendChild(fileSize);
+                
+                fileItem.appendChild(fileInfo);
+                fileItem.appendChild(removeBtn);
+                fileList.appendChild(fileItem);
+            }
+            
+            // Show file preview section
+            if (uploadedFiles.length > 0) {
+                filePreview.classList.remove('hidden');
+            }
+        }
+        
+        // Remove file from uploaded files array
+        function removeFile(fileName) {
+            const index = uploadedFiles.findIndex(file => file.name === fileName);
+            if (index !== -1) {
+                uploadedFiles.splice(index, 1);
+            }
+        }
+        
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+        
+        // Update review section with form data
+        function updateReview() {
+            document.getElementById('review-sellerName').textContent = 
+                document.getElementById('sellerName').value || '-';
+            
+            document.getElementById('review-phoneNumber').textContent = 
+                '+855 ' + (document.getElementById('phoneNumber').value || '-');
+            
+            document.getElementById('review-platform').textContent = 
+                document.getElementById('platform').value 
+                ? document.getElementById('platform').options[document.getElementById('platform').selectedIndex].text 
+                : '-';
+            
+            document.getElementById('review-platformLink').textContent = 
+                document.getElementById('platformLink').value || '-';
+            
+            document.getElementById('review-incidentDescription').textContent = 
+                document.getElementById('incidentDescription').value || '-';
+            
+            if (uploadedFiles.length > 0) {
+                document.getElementById('review-screenshots').textContent = 
+                    `${uploadedFiles.length} screenshot(s) uploaded`;
+            } else {
+                document.getElementById('review-screenshots').textContent = 
+                    'No screenshots uploaded';
+            }
+        }
+        
+        // Submit report
+        function submitReport() {
+            // In a real application, you would save the data to localStorage or send to a server
+            // For this demo, we'll just show a success message
+            
+            // Get form data
+            const reportData = {
+                sellerName: document.getElementById('sellerName').value,
+                phoneNumber: '+855 ' + document.getElementById('phoneNumber').value,
+                platform: document.getElementById('platform').value,
+                platformLink: document.getElementById('platformLink').value,
+                incidentDescription: document.getElementById('incidentDescription').value,
+                screenshots: uploadedFiles.length,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to localStorage (for demo purposes)
+            const reports = JSON.parse(localStorage.getItem('scamReports') || '[]');
+            reports.push(reportData);
+            localStorage.setItem('scamReports', JSON.stringify(reports));
+            
+            // Show success modal
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+        
+        // Reset form for new report
+        function resetForm() {
+            // Reset form fields
+            document.getElementById('scamReportForm').reset();
+            document.getElementById('incidentDescription').value = '';
+            
+            // Clear uploaded files
+            uploadedFiles.length = 0;
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('filePreview').classList.add('hidden');
+            
+            // Reset to step 1
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
